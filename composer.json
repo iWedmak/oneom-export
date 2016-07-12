@@ -1,7 +1,7 @@
 {
     "name": "iwedmak/export",
     "description": "just some randoms stuff",
-    "keywords": ['laravel', 'vk', 'anti-captcha', 'random-step'],
+    "keywords": ["laravel", "vk", "anti-captcha", "random-step"],
     "license": "MIT",
     "authors": [
         {
