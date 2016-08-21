@@ -21,8 +21,8 @@ class VkLib{
     public $owner_id = 0;
 
     /**
-     * Это Конструктор (Кэп.)
-     * Передаются параметры настроек
+     * ГќГІГ® ГЉГ®Г­Г±ГІГ°ГіГЄГІГ®Г° (ГЉГЅГЇ.)
+     * ГЏГҐГ°ГҐГ¤Г ГѕГІГ±Гї ГЇГ Г°Г Г¬ГҐГІГ°Г» Г­Г Г±ГІГ°Г®ГҐГЄ
      * @param array $options
      */
     function __construct($options = array()){
@@ -43,10 +43,10 @@ class VkLib{
     }
 
     /**
-     * Выполнение вызова Api метода
-     * @param string $method - метод, http://vk.com/dev/methods
-     * @param array $vars - параметры метода
-     * @return array - выводит массив данных или ошибку (но тоже в массиве)
+     * Г‚Г»ГЇГ®Г«Г­ГҐГ­ГЁГҐ ГўГ»Г§Г®ГўГ  Api Г¬ГҐГІГ®Г¤Г 
+     * @param string $method - Г¬ГҐГІГ®Г¤, http://vk.com/dev/methods
+     * @param array $vars - ГЇГ Г°Г Г¬ГҐГІГ°Г» Г¬ГҐГІГ®Г¤Г 
+     * @return array - ГўГ»ГўГ®Г¤ГЁГІ Г¬Г Г±Г±ГЁГў Г¤Г Г­Г­Г»Гµ ГЁГ«ГЁ Г®ГёГЁГЎГЄГі (Г­Г® ГІГ®Г¦ГҐ Гў Г¬Г Г±Г±ГЁГўГҐ)
      */
     function api($method = '', $vars = array()){
         
@@ -72,7 +72,7 @@ class VkLib{
     }
 
     /**
-     * Построение конечного URI для выхова
+     * ГЏГ®Г±ГІГ°Г®ГҐГ­ГЁГҐ ГЄГ®Г­ГҐГ·Г­Г®ГЈГ® URI Г¤Г«Гї ГўГ»ГµГ®ГўГ 
      * @param $method
      * @param string $params
      * @return string
@@ -82,9 +82,9 @@ class VkLib{
     }
 
     /**
-     * Получить ссылка на запрос прав доступа
+     * ГЏГ®Г«ГіГ·ГЁГІГј Г±Г±Г»Г«ГЄГ  Г­Г  Г§Г ГЇГ°Г®Г± ГЇГ°Г Гў Г¤Г®Г±ГІГіГЇГ 
      *
-     * @param string $type тип ответа (code - одноразовый код авторизации , token - готовый access token)
+     * @param string $type ГІГЁГЇ Г®ГІГўГҐГІГ  (code - Г®Г¤Г­Г®Г°Г Г§Г®ГўГ»Г© ГЄГ®Г¤ Г ГўГІГ®Г°ГЁГ§Г Г¶ГЁГЁ , token - ГЈГ®ГІГ®ГўГ»Г© access token)
      * @return mixed
      */
     public function get_code_token($type="code"){
@@ -243,7 +243,7 @@ class VkLib{
     }
 
     /**
-     * Заливка документа (например GIF файл)
+     * Г‡Г Г«ГЁГўГЄГ  Г¤Г®ГЄГіГ¬ГҐГ­ГІГ  (Г­Г ГЇГ°ГЁГ¬ГҐГ° GIF ГґГ Г©Г«)
      *
      * @param bool $gid
      * @param $file
@@ -286,7 +286,7 @@ class VkLib{
 
     /**
      *
-     * Заливка видео
+     * Г‡Г Г«ГЁГўГЄГ  ГўГЁГ¤ГҐГ®
      *
      * http://vk.com/dev/video.save
      *
@@ -300,22 +300,17 @@ class VkLib{
         if(!function_exists('curl_init')) return false;
 
         $data_json = $this->api('video.save', $options);
-
         if(!isset($data_json['upload_url'])) return false;
-
-        $attachment = 'video'.$data_json['owner_id'].'_'.$data_json['vid'];
-
+        $attachment = 'video'.$data_json['owner_id'].'_'.$data_json['video_id'];
         $upload_url = $data_json['upload_url'];
         $ch = curl_init($upload_url);
-
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-type: multipart/form-data"));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
-
-        // если указан файл то заливаем его отправкой POST переменной video_file
+        // РµСЃР»Рё СѓРєР°Р·Р°РЅ С„Р°Р№Р» С‚Рѕ Р·Р°Р»РёРІР°РµРј РµРіРѕ РѕС‚РїСЂР°РІРєРѕР№ POST РїРµСЂРµРјРµРЅРЅРѕР№ video_file
         if($file && file_exists($file)){
-            //@todo надо протестировать заливку
+            //@todo РЅР°РґРѕ РїСЂРѕС‚РµСЃС‚РёСЂРѕРІР°С‚СЊ Р·Р°Р»РёРІРєСѓ
             $path = realpath($file);
 
             if(!$path) return false;
@@ -325,12 +320,10 @@ class VkLib{
             curl_setopt($ch, CURLOPT_POSTFIELDS, $files);
             curl_exec($ch);
 
-        // иначе просто обращаемся по адресу (ну надо так!)
+        // РёРЅР°С‡Рµ РїСЂРѕСЃС‚Рѕ РѕР±СЂР°С‰Р°РµРјСЃСЏ РїРѕ Р°РґСЂРµСЃСѓ (РЅСѓ РЅР°РґРѕ С‚Р°Рє!)
         } else {
-
             curl_exec($ch);
         }
-
         return $attachment;
 
     }
